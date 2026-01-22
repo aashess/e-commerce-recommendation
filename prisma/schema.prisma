@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==============================
+// Enums
+// ==============================
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+// ==============================
+// User
+// ==============================
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(CUSTOMER)
+
+  addresses Address[]
+  cart      Cart?
+  orders    Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==============================
+// Address
+// ==============================
+model Address {
+  id     String @id @default(uuid())
+  userId String
+
+  fullName   String
+  phone      String
+  street     String
+  city       String
+  state      String
+  country    String
+  postalCode String
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// ==============================
+// Category & Subcategory
+// ==============================
+model Category {
+  id   String @id @default(uuid())
+  name String @unique
+
+  subcategories Subcategory[]
+}
+
+model Subcategory {
+  id         String @id @default(uuid())
+  name       String
+  categoryId String
+
+  category Category  @relation(fields: [categoryId], references: [id])
+  products Product[]
+
+  @@unique([name, categoryId])
+}
+
+// ==============================
+// Product
+// ==============================
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  price       Int // store in smallest unit (paise / cents)
+  stock       Int
+  imageUrl    String?
+
+  subcategoryId String
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cartItems CartItem[]
+}
+
+// ==============================
+// Cart & CartItem
+// ==============================
+model Cart {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  user  User       @relation(fields: [userId], references: [id])
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model CartItem {
+  id        String @id @default(uuid())
+  cartId    String
+  productId String
+  quantity  Int
+
+  cart    Cart    @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId])
+}
+
+// ==============================
+// Order & OrderItem
+// ==============================
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  status      OrderStatus @default(PENDING)
+  totalAmount Int
+
+  // Address snapshot (VERY IMPORTANT)
+  fullName   String
+  phone      String
+  street     String
+  city       String
+  state      String
+  country    String
+  postalCode String
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  productId String
+
+  productName String
+  price       Int
+  quantity    Int
+
+  order Order @relation(fields: [orderId], references: [id])
+}

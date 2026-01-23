@@ -2,12 +2,14 @@ import prisma from "../../config/prisma.js";
 
 export const addToCart = async (req, res) => {
     try {
-        const userId = req.user.id; // Assuming user ID is stored in req.user
-        const { productId, quantity } = req.body;   
+         
+        const { userId, productId, quantity } = req.body;   
+
 
         if(!productId || !quantity || quantity < 1){
-            return res.status(400).json({ message: "Invalid input or Invalid quantity" });
+            return res.status(400).json({ message: "Invalid quantity value" });
         }
+        
 
         const product = await prisma.product.findUnique({
             where: { id: productId }
@@ -18,7 +20,7 @@ export const addToCart = async (req, res) => {
         }
 
         // 3. Check stock
-        if (product.stock <= quantity) {
+        if (product.stock < quantity) {
             return res.status(400).json({ message: "Insufficient stock" });
         }
 
@@ -72,3 +74,39 @@ export const addToCart = async (req, res) => {
         res.status(500).json({ error: "Failed to add item to cart" });
     }
 };
+
+
+export const getCartItems = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
+        }
+      }
+    });
+
+    if (!cart) {
+      return res.status(404).json({ items: [], totalAmount: 0 });
+    }
+
+    let totalAmount = 0;
+    cart.items.forEach(item => {
+      totalAmount += item.quantity * item.product.price;
+    });
+
+    res.status(200).json({ 
+      items: cart.items, 
+      totalAmount 
+    });
+
+  } catch (error) {
+    console.log(error); 
+    res.status(500).json({ error: "Internal server error" });
+  }
+}

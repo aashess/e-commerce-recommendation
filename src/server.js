@@ -1,5 +1,6 @@
 import express from 'express'
 import productRoute from './router/product/product.routes.js'
+import cart from './router/cart/cart.routes.js'
 
 const app = express() 
 const PORT = 3000   
@@ -7,6 +8,12 @@ const PORT = 3000
 app.use(express.json())
 
 app.use("/api/product", productRoute)
+app.use("/api/cart", cart)
+
+
+
+
+
 app.get("/", (req, res) => {
     res.json({"message": "Running!"})
 })

@@ -5,9 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-}
+  provider = "prisma-client-js"
+} 
 
 datasource db {
   provider = "postgresql"
@@ -80,7 +79,7 @@ model Category {
 model Subcategory {
   id         String @id @default(uuid())
   name       String
-  categoryId String
+  categoryId String 
 
   category Category  @relation(fields: [categoryId], references: [id])
   products Product[]

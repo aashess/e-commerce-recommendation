@@ -1,5 +1,7 @@
 import express from 'express'
 import productRoute from './router/product/product.routes.js'
+import userRoute from "./router/user/user.routes.js"
+
 
 const app = express() 
 const PORT = 3000   
@@ -11,7 +13,8 @@ app.get("/", (req, res) => {
     res.json({"message": "Running!"})
 })
 
-app.use("/api/user", userRoutes)
+app.use("/api/user", userRoute)
+
 
 
 

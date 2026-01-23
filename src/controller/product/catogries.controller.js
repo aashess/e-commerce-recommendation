@@ -1,6 +1,6 @@
 import prisma from "../../config/prisma.js"
 
-export const createCatogries = async (req, res) => {
+export const createCategories = async (req, res) => {
     const {categories} = req.body
 
     try {
@@ -30,3 +30,4 @@ export const getCategories = async (req, res) => {
         data: categories
     })
 }
+

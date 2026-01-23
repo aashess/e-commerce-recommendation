@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
     res.json({"message": "Running!"})
 })
 
-app.use("/api/user", userRoutes)
+// app.use("/api/user", userRoutes)
 
 
 

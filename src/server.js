@@ -7,6 +7,10 @@ app.get("/", (req, res) => {
     res.json({"message": "Running!"})
 })
 
+app.use("/api/user", userRoutes)
+
+
+
 app.listen(PORT, () => {
     console.log("Server is running...", PORT)
 })

@@ -1,65 +1,52 @@
 import prisma from "../../config/prisma.js";
 
 export const updateCartQuantity = async (req, res) => {
-    try {
-        const { userId, productId, quantity } = req.body;
+  try {
+    const { userId, productId, quantity } = req.body;
 
-        if (!productId || !Number.isInteger(quantity) || quantity < 1) {
-            return res.status(400).json({ message: "Invalid quantity" });
-        }
-
-
-        // Find cart
-        const cart = await prisma.cart.findUnique({
-            where: { userId }
-        });
-
-        if (!cart) {
-            return res.status(404).json({ message: "Cart not found" });
-        }
-
-        // Find cart item (must be exists)
-         const cartItem = await prisma.cartItem.findUnique({
-            where: {
-                cartId_productId: {
-                cartId: cart.id,
-                productId: productId
-                }
-            }
-        });
-
-        if (!cartItem) {
-            return res.status(404).json({ message:  "item not in cart" });
-        }
-
-        // Check product stock
-        const product = await prisma.product.findUnique({
-            where: { id: productId }
-        });
-
-        const newQuantity = cartItem.quantity + quantity;
-
-
-        if (newQuantity > product.stock) {
-            return res.status(400).json({ message: "Insufficient stock" });
-        }
-
-        // update or increase quantity
-        await prisma.cartItem.update({
-            where: { id: cartItem.id },
-            data: { quantity: newQuantity }
-        });
-
-        res.status(200).json({ 
-            message: "Quantity updated successfully",
-            cartItem: {
-                productId: cartItem.productId,
-                quantity: newQuantity
-            }
-         });
-
-    } catch (error) {
-        console.error("Error updating cart item quantity:", error);
-        res.status(500).json({ message: "Internal server error" });
+    if (
+      !productId ||
+      !Number.isInteger(quantity) ||
+      quantity < 1 ||
+      quantity > 100
+    ) {
+      return res.status(400).json({
+        message: "Quantity must be between 1 and 100"
+      });
     }
-}
+
+    // ⚡ Single atomic DB operation
+    const result = await prisma.cartItem.updateMany({
+      where: {
+        productId,
+        cart: { userId },
+
+        // ensure final quantity ≤ 100
+        quantity: {
+          lte: 100 - quantity
+        }
+      },
+      data: {
+        quantity: {
+          increment: quantity
+        }
+      }
+    });
+
+    
+    if (result.count === 0) {
+      return res.status(400).json({
+        message: "Update failed (item not found or insufficient stock)"
+      });
+    }
+
+    res.status(200).json({
+      message: "Quantity updated successfully",
+      cartItem: { productId, quantity }
+    });
+
+  } catch (error) {
+    console.error("Error updating cart quantity:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -1,62 +1,48 @@
 import prisma from "../../config/prisma.js";
 
 export const reduceCartQuantity = async (req, res) => {
+  const { userId, productId, reduceBy } = req.body;
+
+  if (reduceBy <= 0) {
+    return res.status(400).json({ message: "reduceBy must be greater than 0" });
+  }
+
   try {
-    const { userId, productId, reduceBy } = req.body;
-
-    if (!productId || !Number.isInteger(reduceBy) || reduceBy < 1) {
-      return res.status(400).json({ message: "Invalid quantity" });
-    }
-
-    // Find the cart
-    const cart = await prisma.cart.findUnique({
-      where: { userId },
-    });
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    // find the cart item must be exists
-    const cartItem = await prisma.cartItem.findUnique({
+    // Try to UPDATE (quantity > reduceBy)
+    const updateResult = await prisma.cartItem.updateMany({
       where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId: productId,
-        },
+        productId,
+        cart: { userId },
+        quantity: { gt: reduceBy }
       },
+      data: {
+        quantity: { decrement: reduceBy }
+      }
     });
 
-    if (!cartItem) {
-      return res.status(404).json({ message: "item not in cart" });
+    //If updated, we're done
+    if (updateResult.count > 0) {
+      return res.status(200).json({ message: "Quantity reduced" });
     }
 
-    // Calculate new quantity
-    const newQuantity = cartItem.quantity - reduceBy;
+    // Else → DELETE (quantity <= reduceBy)
+    const deleteResult = await prisma.cartItem.deleteMany({
+      where: {
+        productId,
+        cart: { userId },
+        quantity: { lte: reduceBy }
+      }
+    });
 
-    if (newQuantity < 1) {
-      return res.status(400).json({
-        message: `Quantity cannot be less than ${cartItem.quantity}`,
-        currentQuantity: cartItem.quantity,
-      });
+    if (deleteResult.count > 0) {
+      return res.status(200).json({ message: "Item removed from cart" });
     }
 
-    
-    // Update the cart item quantity
-    const updatedCartItem = await prisma.cartItem.update({
-      where: { id: cartItem.id },
-      data: { quantity: newQuantity },
-    });
+    // Nothing matched
+    res.status(404).json({ message: "Item not found in cart" });
 
-    res.status(200).json({
-      message: "Quantity reduced successfully",
-      cartItem: {
-        productId: updatedCartItem.productId,
-        quantity: newQuantity,
-      },
-    });
   } catch (error) {
-    console.error("Error reducing cart item quantity:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };

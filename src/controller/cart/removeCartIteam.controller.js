@@ -10,38 +10,23 @@ export const removeCartItem = async (req, res) => {
       });
     }
 
-    // Find user's cart in the database
-    const cart = await prisma.cart.findUnique({
-      where: { userId }
-    });
-    
-
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
-    }
-
-    // Find cart item using compound key
-    const cartItem = await prisma.cartItem.findUnique({
+    // ⚡ Single atomic delete
+    const result = await prisma.cartItem.deleteMany({
       where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId
-        }
+        productId,
+        cart: { userId }
       }
     });
 
-    if (!cartItem) {
-      return res.status(404).json({ message: "Cart item not found" });
+    if (result.count === 0) {
+      return res.status(404).json({
+        message: "Item not found in cart"
+      });
     }
 
-    //Delete the item from cart
-    const deletedItem = await prisma.cartItem.delete({
-      where: { id: cartItem.id }
-    });
-
+    // ✅ Success
     res.status(200).json({
-      message: "Item removed from cart successfully",
-        item: deletedItem
+      message: "Item removed from cart successfully"
     });
 
   } catch (error) {

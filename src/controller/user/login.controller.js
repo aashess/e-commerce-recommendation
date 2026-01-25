@@ -11,7 +11,7 @@ export const login = async (req, res) => {
         email: email,
       },
     });
-
+          console.log("kaise ho?"); 
     if (requestdb) {
       const isPasswordValid = bcrypt.compare(password, requestdb.password);
       if (!isPasswordValid) {

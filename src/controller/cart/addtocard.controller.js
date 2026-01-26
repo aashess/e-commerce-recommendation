@@ -1,6 +1,7 @@
 import prisma from "../../config/prisma.js";
 
 export const addToCart = async (req, res) => {
+
   try {
     const userId = req.user.id;
     const { productId, quantity } = req.body;
@@ -69,7 +70,7 @@ export const addToCart = async (req, res) => {
 
 export const getCartItems = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId  = req.user.id;
 
     const cart = await prisma.cart.findUnique({
       where: { userId },

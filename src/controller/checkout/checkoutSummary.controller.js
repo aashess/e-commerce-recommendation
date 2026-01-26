@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+
 export const placeOrder = async (req, res) => {
   try {
     const userId = req.user.id;

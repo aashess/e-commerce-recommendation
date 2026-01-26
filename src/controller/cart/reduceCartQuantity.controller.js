@@ -1,7 +1,8 @@
 import prisma from "../../config/prisma.js";
 
 export const reduceCartQuantity = async (req, res) => {
-  const { userId, productId, reduceBy } = req.body;
+  const userId = req.user.id;
+  const { productId, reduceBy } = req.body;
 
   if (reduceBy <= 0) {
     return res.status(400).json({ message: "reduceBy must be greater than 0" });

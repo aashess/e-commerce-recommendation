@@ -2,7 +2,8 @@ import prisma from "../../config/prisma.js";
 
 export const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const userId = req.user.id;
+    const { productId, quantity } = req.body;
 
     if (!productId || !quantity || quantity < 1) {
       return res.status(400).json({ message: "Invalid quantity" });

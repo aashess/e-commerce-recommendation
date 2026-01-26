@@ -2,7 +2,8 @@ import prisma from "../../config/prisma.js";
 
 export const removeCartItem = async (req, res) => {
   try {
-    const { userId, productId } = req.body;
+    const userId = req.user.id;
+    const { productId } = req.body;
 
     if (!userId || !productId) {
       return res.status(400).json({
@@ -24,7 +25,7 @@ export const removeCartItem = async (req, res) => {
       });
     }
 
-    // ✅ Success
+    // Success
     res.status(200).json({
       message: "Item removed from cart successfully"
     });

@@ -2,7 +2,8 @@ import prisma from "../../config/prisma.js";
 
 export const updateCartQuantity = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const userId = req.user.id;
+    const { productId, quantity } = req.body;
 
     if (
       !productId ||

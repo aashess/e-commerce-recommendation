@@ -5,21 +5,29 @@ import * as bcrypt from "bcrypt";
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
+      
   try {
     const requestdb = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
-          console.log("kaise ho?"); 
+
+    
     if (requestdb) {
-      const isPasswordValid = bcrypt.compare(password, requestdb.password);
+      const isPasswordValid = await bcrypt.compare(password, requestdb.password);
+      console.log(isPasswordValid);
+      
       if (!isPasswordValid) {
+        console.log("Incorrect Password!");
         res.status(500).json({
           success: false,
           message: "!!Incorrect Password!!",
         });
-        const token = jwt.sign(email, process.env.JWT_SECRET_KEY);
+      }
+        console.log("controller reached here!!");
+              
+        const token = jwt.sign({email}, process.env.JWT_SECRET_KEY,{ expiresIn: "6d" });
         console.log("Successful Login!!");
         res.cookie("authToken", token, {
           httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
@@ -27,13 +35,13 @@ export const login = async (req, res) => {
           maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)
           sameSite: "Strict", // Prevents the browser from sending the cookie with cross-site requests (mitigates CSRF)
         });
-        res.status(201).json({
+         return res.status(201).json({
           success: true,
           message: "!!Successful Login!!",
         });
-      }
+      
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "Email doesn't exist",
       });

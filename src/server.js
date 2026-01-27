@@ -4,6 +4,7 @@ import cart from './router/cart/cart.routes.js'
 import checkoutRoute from './router/checkout/checkout.routes.js'
 import userRoute from "./router/user/user.routes.js"
 import cookieParser from 'cookie-parser'
+import session from 'express-session'
 
 
 
@@ -11,6 +12,14 @@ const app = express()
 const PORT = 3000   
 app.use(cookieParser())
 app.use(express.json())
+app.use(session({
+    secret: 'aashish',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false
+    }
+}))
 
 app.use("/api/product", productRoute)
 app.use("/api/cart", cart)

@@ -1,6 +1,9 @@
 import prisma from "../../config/prisma.js";
 import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
+import Tokens from 'csrf'
+
+const csrf_token = new Tokens()
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -24,10 +27,20 @@ export const login = async (req, res) => {
           success: false,
           message: "!!Incorrect Password!!",
         });
-      }
+      }  
         console.log("controller reached here!!");
               
-        const token = jwt.sign({email}, process.env.JWT_SECRET_KEY,{ expiresIn: "6d" });
+        const token = jwt.sign({email}, process.env.JWT_SECRET_KEY,{ expiresIn: "6d" }); //token is generated
+        
+        // csrf token is being generated. 
+
+        const csrfSecret = csrf_token.secretSync();  
+        req.session.csrfSecret = csrfSecret
+        console.log(req.session.csrfSecret);
+        
+
+        const final_csrf_token = csrf_token.create(csrfSecret)
+
         console.log("Successful Login!!");
         res.cookie("authToken", token, {
           httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
@@ -38,6 +51,7 @@ export const login = async (req, res) => {
          return res.status(201).json({
           success: true,
           message: "!!Successful Login!!",
+          csrf_Token: final_csrf_token
         });
       
     } else {

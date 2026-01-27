@@ -1,7 +1,7 @@
 import prisma from "../../config/prisma.js";
 
 export const addToCart = async (req, res) => {
-
+ 
   try {
     const userId = req.user.id;
     const { productId, quantity } = req.body;
@@ -79,12 +79,12 @@ export const getCartItems = async (req, res) => {
           include: {
             product: true
           }
-        }
+        } 
       }
     });
 
     if (!cart) {
-      return res.status(404).json({ items: [], totalAmount: 0 });
+      return res.status(202).json({ items: [], totalAmount: 0 });
     }
 
     let totalAmount = 0;

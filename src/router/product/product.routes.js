@@ -8,9 +8,9 @@ import { authenticateUser } from '../../middleware/auth.middleware.js';
 
 const router = Router();
 
-// // Product Routes
-// router.get("/all-products", getAllProducts);
-// router.post("/create-product",createProduct);
+// Product Routes
+router.get("/all-products", getAllProducts);
+router.post("/create-product",createProduct);
 
 // // Categories Routes
 // router.get("/all-categories", getCategories);

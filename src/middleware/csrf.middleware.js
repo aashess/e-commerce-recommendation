@@ -35,6 +35,7 @@ export const csrfMiddleware = async (req, res, next) => {
     console.log("IsValidORNOT:: ",valid_csrf_token);
 
     if (valid_csrf_token) {
+      console.log("Req: ------------",req.sessionID);
       next();
     }
   } catch (error) {

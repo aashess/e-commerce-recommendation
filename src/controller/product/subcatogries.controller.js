@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js"
+
 export const createSubcatogries = async (req, res) => {
     const {name, categoriesId} = req.body;
 

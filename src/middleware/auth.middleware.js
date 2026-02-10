@@ -25,7 +25,7 @@ export const authenticateUser = async (req, res, next) => {
         role: true
       },
     });
-
+    
     if (!dbcall) {
       res.status(401).json({
         sucess: false,

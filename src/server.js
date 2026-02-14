@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import { requireAuth, clerkMiddleware } from "@clerk/express";
 import cors from 'cors'
-import authRoute from "./router/authRoutes.js"
+import authRoute from "./router/authRtes.js"
 
 
 const app = express();

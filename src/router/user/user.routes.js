@@ -8,7 +8,7 @@ import { authenticateAdmin } from "../../middleware/admin.middleware.js";
 
 const router = Router();
 
-router.post("/create-user", register)
+router.post("/register", register)
 router.post("/login", login)
 
 router.get("/get-user", authenticateUser, authenticateAdmin, getuser)  //testing-purpose

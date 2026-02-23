@@ -4,9 +4,12 @@ import bcrypt  from 'bcrypt'
 export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
   try {
-    const checkEmailExist = await prisma.user.findUnique({
+    const checkEmailExist = await prisma.account.findUnique({
       where: {
-        email: email,
+        provider_providerId: {
+          provider: 'local',
+          providerId: email
+        }
       },
     });
     if (checkEmailExist) {
@@ -22,8 +25,14 @@ export const register = async (req, res) => {
       data: {
         name: name,
         email: email,
-        password: hashedPassword,
         role: role,
+        accounts: {
+          create: {
+            provider: 'local',
+            providerId: email,
+            passwordhash: hashedPassword
+          }
+        }
       },
     });
     console.log("User Registered.");

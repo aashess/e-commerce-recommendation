@@ -2,3 +2,10 @@
 !!THINGS TO IMPLEMENT!!
 
 * Cache files
+
+oauth - google implement DONE
+google-JWT TOKEN is sent to frontend. DONE
+
+login -- token set --- any request -- 
+
+

@@ -19,7 +19,7 @@ export const authCallback = async (req, res) => {
     // oauthClient.setCredentials(tokens);
 
     // verfiy ID Token and extract user infos.
-    const ticket = oauthClient.verifyIdToken({
+    const ticket = await oauthClient.verifyIdToken({
       idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
@@ -27,10 +27,12 @@ export const authCallback = async (req, res) => {
     // getting email-Name from above ticket...
     const payload = ticket.payload
 
+    console.log(payload);
+    
     
     const token = await oauthJWTLogic(payload);
     // set cookies after login 
-    res.cookie("authToken", token, {
+    res.cookie("token", token, {
           httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
           secure: true, // Ensures the cookie is only sent over HTTPS (use in production)
           maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)

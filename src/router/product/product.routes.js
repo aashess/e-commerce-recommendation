@@ -9,22 +9,13 @@ import { authenticateUser } from '../../middleware/auth.middleware.js';
 const router = Router();
 
 // Product Routes
-router.get("/all-products", getAllProducts);
-router.post("/create-product",createProduct);
-
-// // Categories Routes
-// router.get("/all-categories", getCategories);
-// router.post("/create-categories", createCategories);
-
-// // Sub-Categories Routes
-// router.post("/create-subcatogries", createSubcatogries);
+// router.get("/all-products", getAllProducts);
+// router.post("/create-product",createProduct);
 
 
-
-
-router.post("/create-product",authenticateUser,authenticateAdmin, createProduct);
-router.post("/create-catogries", authenticateUser, authenticateAdmin, createCategories);
-router.get("/all-categories",authenticateUser, authenticateAdmin, getCategories);
+router.post("/create-product",authenticateUser,authenticateAdmin, createProduct);   
+router.post("/create-categories", authenticateUser, authenticateAdmin, createCategories);
+router.get("/all-categories", getCategories);
 router.get("/all-subcategories", authenticateUser, authenticateAdmin, getAllSubCategories);
 router.post("/create-subcatogries", authenticateUser , authenticateAdmin, createSubcatogries);
 router.get("/all-products", getAllProducts);

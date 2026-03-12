@@ -4,8 +4,11 @@ import jwt from "jsonwebtoken";
 // req...cookies , cookies check existence..., db call,  check db response, set db response into req.user, next()
 
 export const authenticateUser = async (req, res, next) => {
-  const token = req.cookies["authToken"];
+  // console.log("Request-------------",req);
+  
+  const token = req.cookies["token"];
 
+  
   if (!token) {
     res.status(401).json({
       sucess: false,

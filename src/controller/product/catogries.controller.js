@@ -9,10 +9,13 @@ export const createCategories = async (req, res) => {
                 name: categories
             }
         });
+
+        console.log(product);
+        
         res.status(201).json({
             success: true,
             message: "Categories created successfully",
-            data: categories
+            data: product.id
         })
     } catch (error) {
         res.status(500).json({

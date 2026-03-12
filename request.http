@@ -1,0 +1,30 @@
+
+# all products view
+get http://localhost:3000/api/product/all-products HTTP/1.1
+
+###
+# create sub categories
+get http://localhost:3000/api/product/all-categories HTTP/1.1
+Content-Type: application/json
+
+###
+# create sub-categories
+POST http://localhost:3000/api/product/create-subcatogries
+Content-Type: application/json
+Cookie: "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFhZGl0QGdtYWlsLmNvbSIsImlhdCI6MTc3MTkzMjMxNCwiZXhwIjoxNzcyNTM3MTE0fQ.cJusrnMmJjxEzZeNVZ2JCAJmBYAIIM7iJc9cKEeTaAI"
+
+{
+  "name": "mobile",
+  "categoriesId": "81596110-3092-40f7-a012-8465c98626fb"
+}
+
+###
+# login user
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "aadit@gmail.com",
+    "password": "aadit"
+}
+

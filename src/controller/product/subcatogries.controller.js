@@ -32,6 +32,9 @@ export const getAllSubCategories = async (req,res) => {
             success: true,
             data: response
         })
+        console.log(response);
+        
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({

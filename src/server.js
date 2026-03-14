@@ -30,19 +30,6 @@ app.use(cors({
   },
   credentials: true // Required if you are sending cookies or auth headers
 }))
-// app.use(
-//   session({
-//     secret: "aashish",
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       secure: false,
-//     },
-//   }),
-// );
-
-// app.use(clerkMiddleware());
-// app.use(requireAuth());
 
 app.use("/api/product", productRoute);
 app.use("/api/cart", cart);

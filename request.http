@@ -28,3 +28,15 @@ Content-Type: application/json
     "password": "aadit"
 }
 
+###
+# register user
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+    "name": "d",
+    "email": "d@gmail.com",
+    "password": "d",
+    "role": "CUSTOMER"
+}
+

@@ -9,3 +9,16 @@ google-JWT TOKEN is sent to frontend. DONE
 login -- token set --- any request -- 
 
 
+
+
+-------- Features -------
+
+Just implelemented Email Sending after registring... 
+Verify-Email with Verification Code. 
+sign-in with google. 
+
+-----Pending Features------
+Oauth with multiple sign-in option. (clerk)
+payment method(stripe, razorpay)
+
+

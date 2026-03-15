@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import productRoute from "./router/product/product.routes.js";
 import cart from "./router/cart/cart.routes.js";

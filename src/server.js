@@ -18,7 +18,7 @@ app.use(express.json());
 //   origin: 'http://locahost:5173',
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
-const allowedOrigins = [`${process.env.FRONTEND_URL}`, '*'];
+const allowedOrigins = ['localhost:5173', '*'];
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like Postman) or those in the list

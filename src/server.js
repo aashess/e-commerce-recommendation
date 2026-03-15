@@ -18,16 +18,8 @@ app.use(express.json());
 //   origin: 'http://locahost:5173',
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
-const allowedOrigins = ['*'];
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like Postman) or those in the list
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*',
   credentials: true // Required if you are sending cookies or auth headers
 }))
 

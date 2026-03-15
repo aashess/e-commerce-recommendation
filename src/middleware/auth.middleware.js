@@ -36,8 +36,7 @@ export const authenticateUser = async (req, res, next) => {
       });
     }
     
-    req.user = dbcall;
-
+    req.user = dbcall; // replacing req with db result
     next();
   } catch (error) {
     console.error(error);

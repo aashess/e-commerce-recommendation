@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         console.log("Successful Login!!");
         res.cookie("token", token, {
           httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
-          secure: false, // Ensures the cookie is only sent over HTTPS (use in production)
+          secure: true, // Ensures the cookie is only sent over HTTPS (use in production)
           maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)
           sameSite: "lax", // Prevents the browser from sending the cookie with cross-site requests (mitigates CSRF)
         });

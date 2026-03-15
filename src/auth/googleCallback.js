@@ -38,7 +38,7 @@ export const authCallback = async (req, res) => {
           maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)
           sameSite: "Strict", // Prevents the browser from sending the cookie with cross-site requests (mitigates CSRF)
         });
-     return res.redirect(`http://localhost:5173/auth/callback`);
+     return res.redirect(`${process.env.FRONTEND_URL}/auth/callback`);
     // return res.status(200).json({
     //   success: true,
     //   token: token,

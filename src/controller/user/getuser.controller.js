@@ -29,3 +29,38 @@ export const getuser = async (req, res) => {
         })
     }
 }
+
+export const getProfile = async (req, res) => {
+    try {
+        const userDetails = {
+            email: req.user.email,
+            name: req.user.name,
+            role: req.user.role,
+            address: req.user.address,
+            cart: req.user.cart,
+            orders: req.user.orders,
+            id: req.user.id,
+            createdAt: req.user.createdAt,
+        }
+        console.log("User Details: ", userDetails);
+        
+        // const {email,  name, role, address, cart, orders, id, createdAt} = req.user
+
+        // console.log("Email, Name, createdAT, role, address", email,  name, role, address, cart, orders, id, createdAt);
+
+        res.status(200).json({
+            success: true,
+            message: "Successful Fetched.",
+            data: userDetails
+
+        })
+        
+    } catch (error) {
+        console.error("Something went wrong in getProfile", error);
+        res.status(400).json({
+            success: false,
+            message: "Something went wrong inside getProfile."
+        })
+        
+    }
+}

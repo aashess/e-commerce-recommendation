@@ -26,7 +26,12 @@ export const authenticateUser = async (req, res, next) => {
       select: {
         id: true,
         name: true,
-        role: true
+        role: true, 
+        email: true,
+        createdAt: true, 
+        cart: true,
+        orders: true,
+        addresses: true
       },
     });
     

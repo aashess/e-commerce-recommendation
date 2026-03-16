@@ -29,7 +29,6 @@ export const authCallback = async (req, res) => {
 
     console.log(payload);
     
-    
     const token = await oauthJWTLogic(payload);
     // set cookies after login 
     res.cookie("token", token, {

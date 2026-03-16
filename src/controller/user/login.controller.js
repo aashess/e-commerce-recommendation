@@ -45,12 +45,14 @@ export const login = async (req, res) => {
         await redis.set(key, csrfSecret, {EX: 7200})   //redis--intalized
 
         console.log("Successful Login!!");
-        res.cookie("token", token, {
-          httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
-          secure: true, // Ensures the cookie is only sent over HTTPS (use in production)
-          maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)
-          sameSite: "lax", // Prevents the browser from sending the cookie with cross-site requests (mitigates CSRF)
-        });
+        res.cookie("token", token
+          // , {
+          // httpOnly: true, // Prevents client-side JavaScript from reading the cookie (mitigates XSS)
+          // secure: true, // Ensures the cookie is only sent over HTTPS (use in production)
+          // maxAge: 3600000, // Cookie expiration time (in milliseconds, e.g., 1 hour)
+          // sameSite: "lax", // Prevents the browser from sending the cookie with cross-site requests (mitigates CSRF)
+        // }
+      );
         res.setHeader('X-CSRF-Token', final_csrf_token)
          return res.status(201).json({
           success: true,

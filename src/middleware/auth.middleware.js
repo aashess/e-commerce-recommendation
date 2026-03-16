@@ -7,7 +7,8 @@ export const authenticateUser = async (req, res, next) => {
   // console.log("Request-------------",req);
   
   const token = req.cookies["token"];
-
+  
+  
   
   if (!token) {
     res.status(401).json({

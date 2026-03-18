@@ -1,19 +1,18 @@
 import prisma from "../../config/prisma.js";
-import bcrypt from "bcrypt";
+
 // import {generateVerificationCode} from "../../utils/generateVerificationCode.js"
+import bcrypt from "bcrypt";
 import { jwtToken } from "../../utils/jwtToken.js";
 import { sendVerficationEmail } from "../../mailtrap/email.js";
 import { generateVerificationCode } from "../../utils/generateVerificationCode.js";
 import { redis } from "../../config/redis.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
     if (!name || !email || !password || !role) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
+      return sendErrorResponse(res, false, 400, "All fields are required");
     }
 
     const checkEmailExist = await prisma.account.findUnique({
@@ -25,10 +24,7 @@ export const register = async (req, res) => {
       },
     });
     if (checkEmailExist) {
-      res.status(500).json({
-        success: false,
-        message: "Email Already Exist",
-      });
+      return sendErrorResponse(res, false, 500, "Email Already Exist");
     }
     // password hash.
     const hashedPassword = await bcrypt.hash(password, 8);
@@ -66,17 +62,10 @@ export const register = async (req, res) => {
     console.log("User Registered.");
     console.log(userCreate);
 
-    res.status(201).json({
-      sucess: true,
-      message: "User created Successfully",
-      data: userCreate,
-    });
+    return sendSuccessResponse(res, true, 201, "User created Successfully", userCreate);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return sendErrorResponse(res, false, 500, error.message);
   }
 };
 
@@ -90,16 +79,24 @@ export const verifyEmail = async (req, res) => {
     const storedVerificationCode = await redis.get(id);
     if (storedVerificationCode == code) {
       console.log("Email Verified!!");
-      res.status(200).json({
-        success: true,
-        message: "Successfully Verified Email.",
-      });
+      // res.status(200).json({
+      //   success: true,
+      //   message: "Successfully Verified Email.",
+      // });
+ 
+
+      return sendSuccessResponse(res,true,200,"Successfully verifed")
+
+
+      
     }
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
+    // res.status(400).json({
+    //   success: false,
+    //   message: error.message,
+    // });
+
+    return sendErrorResponse(res, false, 500, "Something went wrong" )
   }
 };

@@ -9,6 +9,7 @@ import session from "express-session";
 import { requireAuth, clerkMiddleware } from "@clerk/express";
 import cors from 'cors'
 import authRoute from "./router/authRoutes.js"
+import { sendSuccessResponse } from "./utils/responseFormat.js";
 
 
 const app = express();
@@ -39,7 +40,7 @@ app.use("/auth", authRoute)
 
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Running!" });
+  return sendSuccessResponse(res, true, 200, "Running!");
 });
 
 // app.use("/api/user", userRoutes)

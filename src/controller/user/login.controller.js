@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import Tokens from 'csrf'
 import { redis } from "../../config/redis.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 const csrf_token = new Tokens()
 
@@ -21,17 +22,14 @@ export const login = async (req, res) => {
     
     console.log(requestdb);
     
-    
+
     if (requestdb) {
       const isPasswordValid = await bcrypt.compare(password, requestdb.passwordhash);
       console.log(isPasswordValid);
-      
+
       if (!isPasswordValid) {
         console.log("Incorrect Password!");
-        res.status(500).json({
-          success: false,
-          message: "!!Incorrect Password!!",
-        });
+        return sendErrorResponse(res, false, 500, "!!Incorrect Password!!");
       }
         console.log("controller reached here!!");
               
@@ -53,24 +51,12 @@ export const login = async (req, res) => {
         });
         res.setHeader("Access-Control-Expose-Headers", "csrfToken");
         res.setHeader('csrfToken', final_csrf_token)
-         return res.status(201).json({
-          success: true,
-          token: token,
-          message: "!!Successful Login!!",
-          "csrfToken": final_csrf_token
-        });
+        return sendSuccessResponse(res, true, 201, "!!Successful Login!!", { token, csrfToken: final_csrf_token });
     } else {
-      return res.status(500).json({
-        success: false,
-        message: "Email doesn't exist",
-      });
+      return sendErrorResponse(res, false, 500, "Email doesn't exist");
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong...while checking Email.",
-      data: error,
-    });
+    return sendErrorResponse(res, false, 500, "Something went wrong...while checking Email.");
   }
 };

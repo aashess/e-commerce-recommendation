@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const updateCartQuantity = async (req, res) => {
   try {
@@ -11,9 +12,7 @@ export const updateCartQuantity = async (req, res) => {
       quantity < 1 ||
       quantity > 100
     ) {
-      return res.status(400).json({
-        message: "Quantity must be between 1 and 100"
-      });
+      return sendErrorResponse(res, false, 400, "Quantity must be between 1 and 100");
     }
 
     // ⚡ Single atomic DB operation
@@ -34,20 +33,15 @@ export const updateCartQuantity = async (req, res) => {
       }
     });
 
-    
+
     if (result.count === 0) {
-      return res.status(400).json({
-        message: "Update failed (item not found or insufficient stock)"
-      });
+      return sendErrorResponse(res, false, 400, "Update failed (item not found or insufficient stock)");
     }
 
-    res.status(200).json({
-      message: "Quantity updated successfully",
-      cartItem: { productId, quantity }
-    });
+    return sendSuccessResponse(res, true, 200, "Quantity updated successfully", { productId, quantity });
 
   } catch (error) {
     console.error("Error updating cart quantity:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return sendErrorResponse(res, false, 500, "Internal server error");
   }
 };

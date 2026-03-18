@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const removeCartItem = async (req, res) => {
   try {
@@ -6,9 +7,7 @@ export const removeCartItem = async (req, res) => {
     const { productId } = req.body;
 
     if (!userId || !productId) {
-      return res.status(400).json({
-        message: "User ID and Product ID are required"
-      });
+      return sendErrorResponse(res, false, 400, "User ID and Product ID are required");
     }
 
     // ⚡ Single atomic delete
@@ -20,18 +19,14 @@ export const removeCartItem = async (req, res) => {
     });
 
     if (result.count === 0) {
-      return res.status(404).json({
-        message: "Item not found in cart"
-      });
+      return sendErrorResponse(res, false, 404, "Item not found in cart");
     }
 
     // Success
-    res.status(200).json({
-      message: "Item removed from cart successfully"
-    });
+    return sendSuccessResponse(res, true, 200, "Item removed from cart successfully");
 
   } catch (error) {
     console.error("Error removing item from cart:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return sendErrorResponse(res, false, 500, "Internal server error");
   }
 };

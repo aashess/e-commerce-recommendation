@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js"
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const createSubcatogries = async (req, res) => {
     const {name, categoriesId} = req.body;
@@ -11,36 +12,22 @@ export const createSubcatogries = async (req, res) => {
             }
         });
 
-        res.status(201).json({
-            success: true,
-            message: "Subcategories created successfully",
-            data: response
-        })  
+        return sendSuccessResponse(res, true, 201, "Subcategories created successfully", response);
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
+        return sendErrorResponse(res, false, 500, error.message);
     }
 }
 
 export const getAllSubCategories = async (req,res) => {
-    
+
     try {
         const response = await prisma.subcategory.findMany();
-        res.status(200).json({
-            success: true,
-            data: response
-        })
         console.log(response);
-        
-        
+
+        return sendSuccessResponse(res, true, 200, "Subcategories fetched successfully", response);
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        })
-        
+        return sendErrorResponse(res, false, 500, error.message);
     }
 }

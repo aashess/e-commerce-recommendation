@@ -1,5 +1,6 @@
 import { redis } from "../config/redis.js";
 import Tokens from "csrf";
+import { sendErrorResponse } from "../utils/responseFormat.js";
 
 const csrf_token_check = new Tokens();
 
@@ -9,10 +10,7 @@ export const csrfMiddleware = async (req, res, next) => {
     console.log("csrf_TOken:: ",tokenId);
 
     if (!tokenId) {
-        return res.status(500).json({
-            success: false,
-            message: "CSRF Token not found!!"
-        })
+        return sendErrorResponse(res, false, 500, "CSRF Token not found!!");
     }
     
     try {
@@ -23,10 +21,7 @@ export const csrfMiddleware = async (req, res, next) => {
     console.log("csrf_secret:: ",secret);
     
     if (!secret) {
-        return res.status(500).json({
-            success: false,
-            message: "Invalid or Expired CSRF Token!!"
-        })
+        return sendErrorResponse(res, false, 500, "Invalid or Expired CSRF Token!!");
     }
 
     // const csrf_token = req.headers.csrf_token;
@@ -40,9 +35,6 @@ export const csrfMiddleware = async (req, res, next) => {
     }
   } catch (error) {
     console.error("Something went wrong in CSRF Checking!!", error);
-    res.status(501).json({
-      success: false,
-      message: "CSRF Token is invalid.",
-    });
+    return sendErrorResponse(res, false, 501, "CSRF Token is invalid.");
   }
 };

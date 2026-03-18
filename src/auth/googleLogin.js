@@ -1,5 +1,6 @@
 
 import { oauthClient } from "../config/oauthClient.js";
+import { sendSuccessResponse } from "../utils/responseFormat.js";
 
 export const googleLogin = async (req, res) => {
     const authUrl = oauthClient.generateAuthUrl({
@@ -7,8 +8,8 @@ export const googleLogin = async (req, res) => {
         scope: ['openid', 'profile', 'email'],
         state: 'random-string-to-variable'
     });
-    
-    res.json(authUrl)
+
+    return sendSuccessResponse(res, true, 200, "Auth URL generated", { authUrl });
 } 
  
  

@@ -1,14 +1,12 @@
 import { oauthClient } from "../config/oauthClient.js";
 import { oauthJWTLogic } from "../oauthJwtLogic.js";
+import { sendErrorResponse, sendSuccessResponse } from "../utils/responseFormat.js";
 
 export const authCallback = async (req, res) => {
   const code = req.query.code;
   console.log("Controller reached here!!!1");
   if (!code) {
-    return res.status(400).json({
-      success: false,
-      message: "No Code returned from Google!",
-    });
+    return sendErrorResponse(res, false, 400, "No Code returned from Google!");
   }
 
   try {
@@ -46,9 +44,6 @@ export const authCallback = async (req, res) => {
     // });
   } catch (error) {
     console.error("Something went wrong in callback.", error);
-    return res.status(500).json({
-      success: false,
-      message: "Error occured in callback!!",
-    });
+    return sendErrorResponse(res, false, 500, "Error occured in callback!!");
   }
 };

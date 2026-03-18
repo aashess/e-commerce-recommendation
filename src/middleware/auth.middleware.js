@@ -1,5 +1,6 @@
 import prisma from "../config/prisma.js";
 import jwt from "jsonwebtoken";
+import { sendErrorResponse } from "../utils/responseFormat.js";
 
 // req...cookies , cookies check existence..., db call,  check db response, set db response into req.user, next()
 
@@ -11,10 +12,7 @@ export const authenticateUser = async (req, res, next) => {
   
   
   if (!token) {
-    res.status(401).json({
-      sucess: false,
-      message: "No token",
-    });
+    return sendErrorResponse(res, false, 401, "No token");
   }
   try {
     const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -36,19 +34,13 @@ export const authenticateUser = async (req, res, next) => {
     });
     
     if (!dbcall) {
-      res.status(401).json({
-        sucess: false,
-        message: "Invalid token user, Not found!",
-      });
+      return sendErrorResponse(res, false, 401, "Invalid token user, Not found!");
     }
     
     req.user = dbcall; // replacing req with db result
     next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      sucess: false,
-      message: "Something went wrong in middleware",
-    });
+    return sendErrorResponse(res, false, 500, "Something went wrong in middleware");
   }
 };

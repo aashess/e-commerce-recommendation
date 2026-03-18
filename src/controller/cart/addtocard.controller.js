@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const addToCart = async (req, res) => {
  
@@ -9,7 +10,7 @@ export const addToCart = async (req, res) => {
     
 
     if (!productId || !quantity || quantity < 1) {
-      return res.status(400).json({ message: "Invalid quantity" });
+      return sendErrorResponse(res, false, 400, "Invalid quantity");
     }
 
     const result = await prisma.$transaction(async (tx) => {
@@ -50,21 +51,14 @@ export const addToCart = async (req, res) => {
       return cartItem;
     });
 
-    return res.status(200).json({
-      message: "Item added to cart successfully",
-      cartItem: result
-    });
+    return sendSuccessResponse(res, true, 200, "Item added to cart successfully", result);
 
   } catch (error) {
     if (error.message === "MAX_LIMIT") {
-      return res.status(400).json({
-        message: "Maximum 100 units allowed per product"
-      });
+      return sendErrorResponse(res, false, 400, "Maximum 100 units allowed per product");
     }
 
-    return res.status(500).json({
-      message: "Failed to add item to cart"
-    });
+    return sendErrorResponse(res, false, 500, "Failed to add item to cart");
   }
 };
 
@@ -81,12 +75,12 @@ export const getCartItems = async (req, res) => {
           include: {
             product: true
           }
-        } 
+        }
       }
     });
 
     if (!cart) {
-      return res.status(202).json({ items: [], totalAmount: 0 });
+      return sendSuccessResponse(res, true, 202, "Cart items retrieved", { items: [], totalAmount: 0 });
     }
 
     let totalAmount = 0;
@@ -94,13 +88,10 @@ export const getCartItems = async (req, res) => {
       totalAmount += item.quantity * item.product.price;
     });
 
-    res.status(200).json({ 
-      items: cart.items, 
-      totalAmount 
-    });
+    return sendSuccessResponse(res, true, 200, "Cart items retrieved", { items: cart.items, totalAmount });
 
   } catch (error) {
-    console.log(error); 
-    res.status(500).json({ error: "Internal server error" });
+    console.log(error);
+    return sendErrorResponse(res, false, 500, "Internal server error");
   }
 }

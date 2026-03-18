@@ -1,11 +1,12 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const reduceCartQuantity = async (req, res) => {
   const userId = req.user.id;
   const { productId, reduceBy } = req.body;
 
   if (reduceBy <= 0) {
-    return res.status(400).json({ message: "reduceBy must be greater than 0" });
+    return sendErrorResponse(res, false, 400, "reduceBy must be greater than 0");
   }
 
   try {
@@ -23,7 +24,7 @@ export const reduceCartQuantity = async (req, res) => {
 
     //If updated, we're done
     if (updateResult.count > 0) {
-      return res.status(200).json({ message: "Quantity reduced" });
+      return sendSuccessResponse(res, true, 200, "Quantity reduced");
     }
 
     // Else → DELETE (quantity <= reduceBy)
@@ -36,14 +37,14 @@ export const reduceCartQuantity = async (req, res) => {
     });
 
     if (deleteResult.count > 0) {
-      return res.status(200).json({ message: "Item removed from cart" });
+      return sendSuccessResponse(res, true, 200, "Item removed from cart");
     }
 
     // Nothing matched
-    res.status(404).json({ message: "Item not found in cart" });
+    return sendErrorResponse(res, false, 404, "Item not found in cart");
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    return sendErrorResponse(res, false, 500, "Server error");
   }
 };

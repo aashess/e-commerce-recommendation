@@ -1,32 +1,22 @@
 import prisma from "../../config/prisma.js"
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 
 export const getuser = async (req, res) => {
     try {
         const userGet = await prisma.user.findMany()
-    
+
         if (!userGet) {
-            console.log("Error Occured: ",error);
-            res.status(500).json({
-                success: false,
-                message: "Failed to Fetch"
-            })
+            console.log("Error Occured");
+            return sendErrorResponse(res, false, 500, "Failed to Fetch");
         }
        const emailList = userGet.map(element => element.email);
 
+        return sendSuccessResponse(res, true, 201, "User Fetched Successful.", emailList);
 
-            res.status(201).json({
-                success: true,
-                message: "User Fetched Successful.",
-                data: emailList
-            })
-        
     } catch (error) {
         console.log(error);
-        res.status(501).json({
-            success: false,
-            message: "failed to fetch"
-        })
+        return sendErrorResponse(res, false, 501, "failed to fetch");
     }
 }
 
@@ -43,24 +33,11 @@ export const getProfile = async (req, res) => {
             createdAt: req.user.createdAt,
         }
         console.log("User Details: ", userDetails);
-        
-        // const {email,  name, role, address, cart, orders, id, createdAt} = req.user
 
-        // console.log("Email, Name, createdAT, role, address", email,  name, role, address, cart, orders, id, createdAt);
+        return sendSuccessResponse(res, true, 200, "Successful Fetched.", userDetails);
 
-        res.status(200).json({
-            success: true,
-            message: "Successful Fetched.",
-            data: userDetails
-
-        })
-        
     } catch (error) {
         console.error("Something went wrong in getProfile", error);
-        res.status(400).json({
-            success: false,
-            message: "Something went wrong inside getProfile."
-        })
-        
+        return sendErrorResponse(res, false, 400, "Something went wrong inside getProfile.");
     }
 }

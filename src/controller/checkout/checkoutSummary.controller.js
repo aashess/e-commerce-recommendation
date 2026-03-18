@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const placeOrder = async (req, res) => {
   try {
@@ -6,7 +7,7 @@ export const placeOrder = async (req, res) => {
     const { cartItemIds } = req.body;
 
     if (!cartItemIds || cartItemIds.length === 0) {
-      return res.status(400).json({ message: "No products selected" });
+      return sendErrorResponse(res, false, 400, "No products selected");
     }
 
     const cartItems = await prisma.cartItem.findMany({
@@ -15,13 +16,11 @@ export const placeOrder = async (req, res) => {
     });
 
     if (cartItems.length === 0) {
-      return res.status(400).json({ message: "No valid cart items found" });
+      return sendErrorResponse(res, false, 400, "No valid cart items found");
     }
 
     if (cartItems.length !== cartItemIds.length) {
-      return res
-        .status(400)
-        .json({ message: "Some selected products not found in cart" });
+      return sendErrorResponse(res, false, 400, "Some selected products not found in cart");
     }
 
     let totalAmount = 0;
@@ -37,10 +36,10 @@ export const placeOrder = async (req, res) => {
       };
     });
 
-    res.json({ checkoutItems, totalAmount, message: "Go to checkout page" });
-    
+    return sendSuccessResponse(res, true, 200, "Go to checkout page", { checkoutItems, totalAmount });
+
   } catch (error) {
     console.error("Checkout summary error:", error);
-    res.status(500).json({ message: "Error fetching checkout summary" });
+    return sendErrorResponse(res, false, 500, "Error fetching checkout summary");
   }
 };

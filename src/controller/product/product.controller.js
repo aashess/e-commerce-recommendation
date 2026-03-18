@@ -1,4 +1,5 @@
 import prisma from "../../config/prisma.js";
+import { sendErrorResponse, sendSuccessResponse } from "../../utils/responseFormat.js";
 
 export const createProduct = async (req, res) => {
   const { name, description, price, stock, subcategoryId } = req.body;
@@ -16,33 +17,19 @@ export const createProduct = async (req, res) => {
 
     console.log(product);
 
-    res.status(201).json({
-      sucess: true,
-      message: "Product created Successfully",
-      data: product,
-    });
+    return sendSuccessResponse(res, true, 201, "Product created Successfully", product);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      sucess: false,
-      message: error.message,
-    });
+    return sendErrorResponse(res, false, 500, error.message);
   }
 };
 
 export const getAllProducts = async (req, res) => {
   try {
     const products = await prisma.product.findMany();
-    res.status(200).json({
-      success: true,
-      data: products,
-    });
+    return sendSuccessResponse(res, true, 200, "Products fetched successfully", products);
   } catch (error) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return sendErrorResponse(res, false, 500, error.message);
   }
 };

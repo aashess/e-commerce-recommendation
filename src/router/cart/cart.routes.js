@@ -10,7 +10,7 @@ const router = Router();
 // Define cart routes here
 
 router.post("/addToCart",authenticateUser, csrfMiddleware,addToCart);  //user
-router.get("/getAllCartItems",authenticateUser, getCartItems);  //user
+router.get("/getAllCartItems",authenticateUser,csrfMiddleware, getCartItems);  //user
 router.put("/add-quantity", authenticateUser, csrfMiddleware, updateCartQuantity); //user
 router.put("/reduce-quantity", authenticateUser,csrfMiddleware, reduceCartQuantity); //user
 router.delete("/remove-item", authenticateUser, csrfMiddleware, removeCartItem); //user

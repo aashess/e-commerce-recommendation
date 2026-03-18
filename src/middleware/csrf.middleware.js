@@ -19,7 +19,7 @@ export const csrfMiddleware = async (req, res, next) => {
     // const csrf_secret = req.session.csrfSecret;
     const key = `csrf:${tokenId}`
     const secret = await redis.get(key);
-
+      
     console.log("csrf_secret:: ",secret);
     
     if (!secret) {
@@ -35,7 +35,7 @@ export const csrfMiddleware = async (req, res, next) => {
     console.log("IsValidORNOT:: ",valid_csrf_token);
 
     if (valid_csrf_token) {
-      console.log("Req: ------------",req.sessionID);
+      console.log("Middleware Next() ");
       next();
     }
   } catch (error) {

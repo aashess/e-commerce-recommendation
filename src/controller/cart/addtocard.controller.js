@@ -5,6 +5,8 @@ export const addToCart = async (req, res) => {
   try {
     const userId = req.user.id;
     const { productId, quantity } = req.body;
+    console.log('productId, quantity', productId, quantity, userId);
+    
 
     if (!productId || !quantity || quantity < 1) {
       return res.status(400).json({ message: "Invalid quantity" });

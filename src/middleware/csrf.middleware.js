@@ -5,7 +5,7 @@ const csrf_token_check = new Tokens();
 
 export const csrfMiddleware = async (req, res, next) => {
     console.log("Controller reached in middleware!!");
-    const tokenId = req.get('X-CSRF-Token')
+    const tokenId = req.get('csrfToken')
     console.log("csrf_TOken:: ",tokenId);
 
     if (!tokenId) {

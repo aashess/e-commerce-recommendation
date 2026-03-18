@@ -51,12 +51,12 @@ export const login = async (req, res) => {
           sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Allows cross-origin in production
           maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         });
-        res.setHeader('X-CSRF-Token', final_csrf_token)
+        res.setHeader('csrfToken', final_csrf_token)
          return res.status(201).json({
           success: true,
           token: token,
           message: "!!Successful Login!!",
-          "csrf-token": final_csrf_token
+          "csrfToken": final_csrf_token
         });
     } else {
       return res.status(500).json({

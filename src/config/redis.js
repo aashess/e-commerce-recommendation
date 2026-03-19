@@ -15,5 +15,7 @@ redis.on('error', err => {
     
 })
 
-await redis.connect()
+
+
+
 

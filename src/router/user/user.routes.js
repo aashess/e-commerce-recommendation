@@ -16,5 +16,4 @@ router.get("/get-user", authenticateUser, authenticateAdmin, getuser)  //testing
 
 router.get('/get-profile', authenticateUser, getProfile)
 
-
 export default router;

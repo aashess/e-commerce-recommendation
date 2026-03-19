@@ -22,3 +22,4 @@ export const sendErrorResponse = (res, success = false, statusCode, errorMessage
         ...extra
       });
 };
+

@@ -10,6 +10,8 @@ import { requireAuth, clerkMiddleware } from "@clerk/express";
 import cors from 'cors'
 import authRoute from "./router/authRoutes.js"
 import { sendSuccessResponse } from "./utils/responseFormat.js";
+import razorpayRoutes from "./router/payment/razorpayRoutes.js"
+import { redis } from './config/redis.js';
 
 
 const app = express();
@@ -37,14 +39,21 @@ app.use("/api/cart", cart);
 app.use("/api/checkout", checkoutRoute);
 app.use("/api/user", userRoute);
 app.use("/auth", authRoute)
+app.use("/payment", razorpayRoutes)
+
+
 
 
 app.get("/", (req, res) => {
+  
   return sendSuccessResponse(res, true, 200, "Running!");
+
 });
 
 // app.use("/api/user", userRoutes)
 
 app.listen(PORT, () => {
   console.log("Server is running...", PORT);
+  
+  // redis.connect()
 });

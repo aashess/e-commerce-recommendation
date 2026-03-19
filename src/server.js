@@ -55,5 +55,5 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log("Server is running...", PORT);
   
-  // redis.connect()
+  redis.connect()
 });

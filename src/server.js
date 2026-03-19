@@ -22,6 +22,8 @@ app.use(express.json());
 //   origin: 'http://locahost:5173',
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
+const allowedOrigins = process.env.ALLOWED_ORIGINS;
+
 app.use(cors({
    origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {

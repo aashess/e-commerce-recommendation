@@ -23,7 +23,14 @@ app.use(express.json());
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // }
 app.use(cors({
-  origin:process.env.ALLOWED_ORIGINS,
+   origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  
   credentials: true // Required if you are sending cookies or auth headers
 }))
 

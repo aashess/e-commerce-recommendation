@@ -1,11 +1,10 @@
 import rateLimit from 'express-rate-limit';
-import RedisStore from 'rate-limit-redis';
-import { redis } from '../config/redis.js';
 import logger from '../config/logger.js';
 
 /**
  * Rate limiting configurations for different endpoints
- * Uses Redis to track requests across multiple instances
+ * Uses in-memory store (suitable for single server deployement)
+ * For multi-server deployment, use RedisStore from rate-limit-redis
  */
 
 /**
@@ -13,10 +12,6 @@ import logger from '../config/logger.js';
  * 5 requests per 15 minutes per IP
  */
 export const authLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis,
-    prefix: 'app:ratelimit:auth:',
-  }),
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
   message: 'Too many authentication attempts, please try again later',
@@ -44,10 +39,6 @@ export const authLimiter = rateLimit({
  * 10 requests per hour per user (authenticated)
  */
 export const paymentLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis,
-    prefix: 'app:ratelimit:payment:',
-  }),
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 10,
   keyGenerator: (req) => {
@@ -78,10 +69,6 @@ export const paymentLimiter = rateLimit({
  * 100 requests per minute per user (authenticated) or IP (unauthenticated)
  */
 export const apiLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis,
-    prefix: 'app:ratelimit:api:',
-  }),
   windowMs: 60 * 1000, // 1 minute
   max: 100,
   keyGenerator: (req) => {
@@ -111,10 +98,6 @@ export const apiLimiter = rateLimit({
  * 1000 requests per hour per IP
  */
 export const publicLimiter = rateLimit({
-  store: new RedisStore({
-    client: redis,
-    prefix: 'app:ratelimit:public:',
-  }),
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 1000,
   standardHeaders: true,

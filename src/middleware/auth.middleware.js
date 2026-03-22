@@ -12,6 +12,8 @@ export const authenticateUser = async (req, res, next) => {
   
   
   if (!token) {
+    console.log('No Token Found!');
+    
     return sendErrorResponse(res, false, 401, "No token");
   }
   try {

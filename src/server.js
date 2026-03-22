@@ -32,7 +32,6 @@ app.use(cors({
       callback(new Error("Not allowed by CORS"));
     }
   },
-  
   credentials: true // Required if you are sending cookies or auth headers
 }))
 

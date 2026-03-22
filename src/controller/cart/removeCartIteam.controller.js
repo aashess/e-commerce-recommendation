@@ -23,6 +23,8 @@ export const removeCartItem = async (req, res) => {
     }
 
     // Success
+    console.log('Item removed successfully');
+    
     return sendSuccessResponse(res, true, 200, "Item removed from cart successfully");
 
   } catch (error) {

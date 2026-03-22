@@ -10,6 +10,7 @@ const router = Router();
 
 router.post("/register", register)
 router.post("/login", login)
+
 router.post("/verify-email", authenticateUser, verifyEmail)
 
 router.get("/get-user", authenticateUser, authenticateAdmin, getuser)  //testing-purpose

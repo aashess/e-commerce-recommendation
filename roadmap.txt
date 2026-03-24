@@ -19,6 +19,12 @@ sign-in with google.
 
 -----Pending Features------
 Oauth with multiple sign-in option. (clerk)
-payment method(stripe, razorpay)
+payment method(stripe, razorpay)  ---- Ongoing.
+
+
+---FINISHED FEATURES---- 
+Cart Finish. 
+
+
 
 

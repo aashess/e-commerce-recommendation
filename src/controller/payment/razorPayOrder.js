@@ -13,7 +13,7 @@ export const createOrder = async (req, res) => {
         }
         const receipt = 'order11'
         var options = {
-  amount:  (amount * 100),  // Amount is in currency subunits. 
+  amount:  (amount * 100),  // Amount is in currency
   currency: currency,
   receipt: receipt,
   notes: {task: notes}

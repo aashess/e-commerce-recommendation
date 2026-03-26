@@ -3,7 +3,7 @@ import { Router } from "express";
 const router = Router()
 
 router.post('/order', createOrder)
-
+router.post('verify-payment', verifyPayment)
 
 export default router;
 

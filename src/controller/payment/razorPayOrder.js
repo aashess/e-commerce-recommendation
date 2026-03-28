@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import dotenv from 'dotenv'
 dotenv.config();
 import { razorpay } from "../../config/razorpay.js";
+import { validatePaymentVerification, validateWebhookSignature } from 'razorpay/dist/utils/razorpay-utils.js';
 import {
   sendErrorResponse,
   sendSuccessResponse,
@@ -39,15 +40,18 @@ export const createOrder = async (req, res) => {
 
 
 export const verifyPayment = async (req, res) => {
+    const {razorpay_order_id,razorpay_payment_id, razorpay_signature} = req.body
+    
+    const body = razorpay_order_id + "|" + razorpay_payment_id
+
     try {
         console.log("Request Reached here://", req.body);
 
-        const {razorpay_payment_id, razorpay_signature} = req.body
      
         // const razorpay_order_id = order_id
-        const razorpay_order_id = await redis.get(req.user.id)
+        // const razorpay_order_id = await redis.get(req.user.id)
         
-        console.log("RozorPay_Order_ID: ",razorpay_order_id);
+        // console.log("RozorPay_Order_ID: ",razorpay_order_id);
 
 //         console.log("FROM FRONTEND:", req.body.razorpay_order_id);
 // console.log("FROM REDIS:", razorpay_order_id);
